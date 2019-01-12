@@ -24,3 +24,10 @@ socket.on('disconnect', function () {
 socket.on('newMsg', function(msg) {
   console.log('New Msg', msg);
 });
+
+socket.emit('createMsg', {
+  from: 'Frank',
+  text:'Hi'
+}, function(data) {
+  console.log('Got it', data);
+});

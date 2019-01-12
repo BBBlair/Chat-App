@@ -25,15 +25,15 @@ io.on('connection', (socket) => {
     //   console.log('createEmail', newEmail);
     // });
 
-    socket.emit('newMsg', generateMsg('Admin','Welcome to the chat room'));
+  socket.emit('newMsg', generateMsg('Admin','Welcome to the chat room'));
 
-    socket.broadcast.emit('newMsg', generateMsg('Admin','A new user joins!'));
+  socket.broadcast.emit('newMsg', generateMsg('Admin','A new user joins!'));
 
-//socket.emit() only emits an event to one user but io.emit() does it to every connection
-  socket.on('createMsg', (msg) => {
+  //socket.emit() only emits an event to one user but io.emit() does it to every connection
+  socket.on('createMsg', (msg, callback) => {
     console.log('createMsg', msg);
     io.emit('newMsg', generateMsg(msg.from, msg.text));
-
+    callback('This is from the server');
     // socket.broadcast.emit('newMsg', {
     //   from: msg.from,
     //   text: msg.text,
