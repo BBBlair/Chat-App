@@ -24,6 +24,18 @@ io.on('connection', (socket) => {
     //   console.log('createEmail', newEmail);
     // });
 
+    socket.emit('newMsg', {
+      from: 'Admin',
+      text: 'Welcome to the chat room',
+      createdAt: new Date().getTime()
+    });
+
+    socket.broadcast.emit('newMsg', {
+      from: 'Admin',
+      text: 'A new user joins!',
+      createdAt: new Date().getTime()
+    });
+
 //socket.emit() only emits an event to one user but io.emit() does it to every connection
   socket.on('createMsg', (msg) => {
     console.log('createMsg', msg);
@@ -31,7 +43,12 @@ io.on('connection', (socket) => {
       from: msg.from,
       text: msg.text,
       createdAt: new Date().getTime()
-    })
+    });
+    // socket.broadcast.emit('newMsg', {
+    //   from: msg.from,
+    //   text: msg.text,
+    //   createdAt: new Date().getTime()
+    // });
   });
 
   socket.on('disconnect', () => {
