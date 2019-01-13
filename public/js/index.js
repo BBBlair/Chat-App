@@ -22,11 +22,20 @@ socket.on('disconnect', function () {
 });
 
 socket.on('newMsg', function(msg) {
-  var formattedTime = moment(msg.createAt).format('h:mm a, Do MMM, YYYY');
-  console.log('New Msg', msg);
-  var li = jQuery('<li></li>');
-  li.text(`${msg.from} ${formattedTime}: ${msg.text}`);
-  jQuery('#messages').append(li);
+  var formattedTime = moment(msg.createAt).format('h:mm a, Do MMM  YYYY');
+  var template = jQuery('#message-template').html();
+  var html = Mustache.render(template, {
+    text: msg.text,
+    from: msg.from,
+    createAt: formattedTime
+  });
+
+  jQuery('#messages').append(html);
+
+  // console.log('New Msg', msg);
+  // var li = jQuery('<li></li>');
+  // li.text(`${msg.from} ${formattedTime}: ${msg.text}`);
+  // jQuery('#messages').append(li);
 });
 
 // socket.emit('createMsg', {
@@ -38,14 +47,15 @@ socket.on('newMsg', function(msg) {
 
 //target="_blank" tells the broswer to open a new tab, not redirecting the current one
 socket.on('newLocMsg', function(msg) {
-  var li = jQuery('<li></li>');
-  var a = jQuery('<a target="_blank">My current Location</a>');
-  var formattedTime = moment(msg.createAt).format('h:mm a, Do MMM, YYYY');
+  var formattedTime = moment(msg.createAt).format('h:mm a, Do MMM  YYYY');
+  var template = jQuery('#location-message-template').html();
+  var html = Mustache.render(template, {
+    from: msg.from,
+    url: msg.url,
+    createAt: formattedTime
+  });
 
-  li.text(`${msg.from} ${formattedTime}:`);
-  a.attr('href', msg.url);
-  li.append(a);
-  jQuery('#messages').append(li);
+  jQuery('#messages').append(html);
 });
 
 
