@@ -22,9 +22,10 @@ socket.on('disconnect', function () {
 });
 
 socket.on('newMsg', function(msg) {
+  var formattedTime = moment(msg.createAt).format('h:mm a, Do MMM, YYYY');
   console.log('New Msg', msg);
   var li = jQuery('<li></li>');
-  li.text(`${msg.from}: ${msg.text}`);
+  li.text(`${msg.from} ${formattedTime}: ${msg.text}`);
   jQuery('#messages').append(li);
 });
 
@@ -39,8 +40,9 @@ socket.on('newMsg', function(msg) {
 socket.on('newLocMsg', function(msg) {
   var li = jQuery('<li></li>');
   var a = jQuery('<a target="_blank">My current Location</a>');
+  var formattedTime = moment(msg.createAt).format('h:mm a, Do MMM, YYYY');
 
-  li.text(`${msg.from}: `);
+  li.text(`${msg.from} ${formattedTime}:`);
   a.attr('href', msg.url);
   li.append(a);
   jQuery('#messages').append(li);
