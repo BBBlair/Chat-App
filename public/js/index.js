@@ -35,6 +35,18 @@ socket.on('newMsg', function(msg) {
 //   console.log('Got it', data);
 // });
 
+//target="_blank" tells the broswer to open a new tab, not redirecting the current one
+socket.on('newLocMsg', function(msg) {
+  var li = jQuery('<li></li>');
+  var a = jQuery('<a target="_blank">My current Location</a>');
+
+  li.text(`${msg.from}: `);
+  a.attr('href', msg.url);
+  li.append(a);
+  jQuery('#messages').append(li);
+});
+
+
 jQuery('#message-form').on('submit', function(e) {
   e.preventDefault();
 
@@ -43,5 +55,22 @@ jQuery('#message-form').on('submit', function(e) {
     text: jQuery('[name=message]').val()
   }, function () {
 
+  });
+});
+
+
+var locationButton = jQuery('#send-location');
+locationButton.on('click', function() {
+  if (!navigator.geolocation) {
+    return alert('Geolocation not supported by your browser');
+  };
+
+  navigator.geolocation.getCurrentPosition(function(position){
+    socket.emit('createLocationMsg', {
+      latitude: position.coords.latitude,
+      longitude: position.coords.longitude
+    })
+  }, function() {
+    alert('Unable to fetch location.');
   });
 });
