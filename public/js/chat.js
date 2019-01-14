@@ -95,18 +95,17 @@ socket.on('newLocMsg', function(msg) {
   scrollToBottom();
 });
 
-
 jQuery('#message-form').on('submit', function(e) {
   e.preventDefault();
 
-  socket.emit('createMsg', {
-    from: 'User',
-    text: jQuery('[name=message]').val()
-  }, function () {
+  msgTextBox = jQuery('[name=message]');
 
+  socket.emit('createMsg', {
+    text: msgTextBox.val();
+  }, function () {
+    msgTextBox.val('');
   });
 });
-
 
 var locationButton = jQuery('#send-location');
 locationButton.on('click', function() {

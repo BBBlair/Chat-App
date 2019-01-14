@@ -53,8 +53,12 @@ io.on('connection', (socket) => {
 
   //socket.emit() only emits an event to one user but io.emit() does it to every connection
   socket.on('createMsg', (msg, callback) => {
-    console.log('createMsg', msg);
-    io.emit('newMsg', generateMsg(msg.from, msg.text));
+    var user = users.getUser(socket.id);
+
+    if(user && isRealString(msg.text)){
+      io.to(user.room).emit('newMsg', generateMsg(user.name, msg.text));
+    }
+
     callback('This is from the server');
     // socket.broadcast.emit('newMsg', {
     //   from: msg.from,
@@ -64,7 +68,10 @@ io.on('connection', (socket) => {
   });
 
   socket.on('createLocationMsg', (coords) => {
-    io.emit('newLocMsg', generateLocMsg('Admin',coords.latitude, coords.longitude));
+    var user = users.getUser(socket.id);
+    if(user){
+      io.to(user.room).emit('newLocMsg', generateLocMsg(user.name, coords.latitude, coords.longitude));
+    }
   });
 
   socket.on('disconnect', () => {
